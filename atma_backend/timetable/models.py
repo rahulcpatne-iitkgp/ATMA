@@ -65,7 +65,7 @@ class Classroom(models.Model):
     
 
 # -----------------------------------------------------------------------------
-# 5. TimeSlot Model (Each course has number of slots equal to number of credits)
+# 5. TimeSlot Model (Fixed slots throughout the week)
 # -----------------------------------------------------------------------------
 class TimeSlot(models.Model):
     DAYS_OF_WEEK = [
@@ -75,14 +75,49 @@ class TimeSlot(models.Model):
         ('Thursday', 'Thursday'),
         ('Friday', 'Friday'),
     ]
+    
+    SLOT_CHOICES = [
+        ('A', '8:00 - 9:00'),
+        ('B', '9:00 - 10:00'),
+        ('C', '10:00 - 11:00'),
+        ('D', '11:00 - 12:00'),
+        ('E', '12:00 - 13:00'),
+        ('F', '14:00 - 15:00'),
+        ('G', '15:00 - 16:00'),
+        ('H', '16:00 - 17:00'),
+    ]
 
     day = models.CharField(max_length=10, choices=DAYS_OF_WEEK)
-    start_time = models.TimeField()
-    end_time = models.TimeField()
+    slot = models.CharField(max_length=1, choices=SLOT_CHOICES)
+    start_time = models.TimeField(blank=True)
+    end_time = models.TimeField(blank=True)
+    
+    class Meta:
+        unique_together = ['day', 'slot']  # Ensure day+slot combination is unique
+
+    def save(self, *args, **kwargs):
+        # Automatically set start_time and end_time based on slot
+        slot_times = {
+            'A': ('08:00:00', '09:00:00'),
+            'B': ('09:00:00', '10:00:00'),
+            'C': ('10:00:00', '11:00:00'),
+            'D': ('11:00:00', '12:00:00'),
+            'E': ('12:00:00', '13:00:00'),
+            'F': ('14:00:00', '15:00:00'),
+            'G': ('15:00:00', '16:00:00'),
+            'H': ('16:00:00', '17:00:00'),
+        }
+        
+        if self.slot in slot_times:
+            import datetime
+            self.start_time = datetime.time.fromisoformat(slot_times[self.slot][0])
+            self.end_time = datetime.time.fromisoformat(slot_times[self.slot][1])
+            
+        super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.day} ({self.start_time} - {self.end_time})"
-    
+        return f"{self.day} (Slot {self.slot}: {self.start_time.strftime('%H:%M')} - {self.end_time.strftime('%H:%M')})"
+
 
 # -----------------------------------------------------------------------------
 # 6. Student Model (Inherits from User)
@@ -140,7 +175,8 @@ class Course(models.Model):
     )
     batches = models.ManyToManyField(
         Batch,
-        related_name='courses'
+        related_name='courses',
+        blank=True,
     )
     elective_students = models.ManyToManyField(
         Student,
@@ -162,7 +198,11 @@ class Course(models.Model):
         Check if the course is an elective course for the given student.
         """
         return self.elective_students.filter(id=student.id).exists()
-    
+
+
+# -----------------------------------------------------------------------------
+# 8. Schedule Model (Links Course, TimeSlot, and Classroom)
+# -----------------------------------------------------------------------------
 class Schedule(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='schedules')
     timeslot = models.ForeignKey(TimeSlot, on_delete=models.CASCADE, related_name='schedules')

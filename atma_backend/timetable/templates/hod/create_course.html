@@ -1,0 +1,14 @@
+{% extends "hod/base.html" %}
+{% load static %}
+{% block title %}Create Course{% endblock %}
+{% block content %}
+<div class="container">
+  <h1>Create Course</h1>
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Create Course</button>
+  </form>
+  <a href="{% url 'hod-manage-courses' %}" class="btn btn-secondary">Back to Course List</a>
+</div>
+{% endblock %}

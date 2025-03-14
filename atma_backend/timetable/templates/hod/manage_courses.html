@@ -1,0 +1,21 @@
+{% extends "hod/base.html" %}
+{% load static %}
+{% block content %}
+<main class="manage-courses-container">
+  <h1>Manage Courses</h1>
+  <div class="course-list">
+    <h2>Available Courses</h2>
+    <ul>
+      {% for course in courses %}
+        <li>{{ course.name }} - {{ course.code }}</li>
+      {% empty %}
+        <li>No courses available.</li>
+      {% endfor %}
+    </ul>
+  </div>
+  <div class="create-course">
+    <a href="{% url 'hod-create-course' %}" class="btn btn-primary">Create New Course</a>
+  </div>
+
+</main>
+{% endblock %}

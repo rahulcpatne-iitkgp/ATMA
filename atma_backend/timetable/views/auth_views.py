@@ -1,11 +1,17 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .forms import CustomUserCreationForm, CustomAuthenticationForm
+from ..forms import CustomUserCreationForm, CustomAuthenticationForm
 
 @login_required
 def home(request):
-    return render(request, 'timetable/home.html')
+    context = {
+        'user': request.user,
+    }
+    if request.user.is_authenticated:
+        if request.user.role == 'teacher' and request.user == request.user.department.hod:
+            return render(request, 'hod/home.html', context)
+    return render(request, 'timetable/home.html', context)
 
 def login_view(request):
     if request.method == 'POST':

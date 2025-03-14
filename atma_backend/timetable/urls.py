@@ -1,9 +1,11 @@
 from django.urls import path
-from . import views
+from .views import auth_views, hod_views
 
 urlpatterns = [
-    path('', views.home, name="home"),
-    path('login/', views.login_view, name='login'),
-    path('signup/', views.signup_view, name='signup'),
-    path('logout/', views.logout_view, name='logout'),
+    path('', auth_views.home, name="home"),
+    path('login/', auth_views.login_view, name='login'),
+    path('signup/', auth_views.signup_view, name='signup'),
+    path('logout/', auth_views.logout_view, name='logout'),
+    path('manage-courses/', hod_views.manage_courses, name='hod-manage-courses'),   # Only accessible to HOD and Admin
+    path('create-course/', hod_views.create_course, name='hod-create-course'),   # Only accessible to HOD and Admin
 ]

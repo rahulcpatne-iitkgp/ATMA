@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ATMA-HOD</title>
+  <!-- <link rel="stylesheet" href="styles.css"> Link to your CSS file -->
+</head>
+<body>
+  <header>
+    <h1>{{ user.department }}</h1>
+    <h2>Welcome, {{ user.username }}</h2>
+  </header>
+  <nav>
+    <ul>
+      <li><a href="{% url 'home' %}">Home</a></li>
+      <li><a href="{% url 'hod-manage-courses' %}">Manage Courses</a></li>
+      <li><a href="{% url 'home' %}">Profile</a></li>
+    </ul>
+  </nav>
+  {% block content %}
+  {% endblock %}
+  <footer>
+    <a href="{% url 'logout' %}" class="btn btn-primary">Logout</a>
+    <p>&copy; 2025 ATMA. All rights reserved.</p>
+  </footer>
+</body>
+</html>
