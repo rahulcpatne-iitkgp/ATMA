@@ -8,4 +8,6 @@ urlpatterns = [
     path('logout/', auth_views.logout_view, name='logout'),
     path('manage-courses/', hod_views.manage_courses, name='hod-manage-courses'),   # Only accessible to HOD and Admin
     path('create-course/', hod_views.create_course, name='hod-create-course'),   # Only accessible to HOD and Admin
+    path('schedule-course/<str:course_id>/', hod_views.schedule_course, name='hod-schedule-course'),   # Only accessible to HOD and Admin
+    path('delete-course/<str:course_id>/', hod_views.delete_course, name='hod-delete-course'),   # Only accessible to HOD and Admin
 ]

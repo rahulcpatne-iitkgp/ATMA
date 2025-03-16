@@ -28,7 +28,5 @@ def populate_timeslots(sender, **kwargs):
             TimeSlot.objects.create(
                 day=day,
                 slot=slot,
-                start_time=start,
-                end_time=end
             )
     print("TimeSlots populated successfully.")
