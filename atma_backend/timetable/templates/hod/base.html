@@ -1,29 +1,65 @@
+{% load static %}
+{% load custom_filters %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ATMA-HOD</title>
-  {% load static %}
+
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
-  <header>
-    <h1>{{ user.department }}</h1>
-    <h2>Welcome, {{ user.username }}</h2>
-  </header>
-  <nav>
-    <ul>
-      <li><a href="{% url 'home' %}">Home</a></li>
-      <li><a href="{% url 'hod-manage-courses' %}">Manage Courses</a></li>
-      <li><a href="{% url 'home' %}">Profile</a></li>
-      <li><a href="{% url 'logout' %}">Logout</a></li>
-    </ul>
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a href="{% url 'home' %}">{{ user.department }} Dashboard</a>
+    </div>
+    
+    <div class="navbar-menu">
+      <a href="{% url 'home' %}">Home</a>
+      <a href="{% url 'hod-manage-courses' %}">Manage Courses</a>
+      <a href="{% url 'home' %}">Profile</a>
+      <a href="{% url 'logout' %}">Logout</a>
+      
+      <button class="theme-toggle" id="theme-toggle">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="theme-icon">
+          <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z" />
+        </svg>
+        <span id="theme-text">Dark Mode</span>
+      </button>
+    </div>
   </nav>
-  {% block content %}
-  {% endblock %}
-  <footer>
-    <p>&copy; 2025 ATMA. All rights reserved.</p>
-  </footer>
+  
+  <div class="container">
+    <div class="welcome-banner">
+      <h2>Welcome, {{ user.username }}</h2>
+    </div>
+    
+    {% block content %}
+    {% endblock %}
+  </div>
+
+  <script>
+    // Theme toggle functionality
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeText = document.getElementById('theme-text');
+    
+    // Check for saved theme preference or use default
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    themeText.textContent = savedTheme === 'dark' ? 'Light Mode' : 'Dark Mode';
+    
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      themeText.textContent = newTheme === 'dark' ? 'Light Mode' : 'Dark Mode';
+    });
+  </script>
 </body>
 </html>

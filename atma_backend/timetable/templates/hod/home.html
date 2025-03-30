@@ -1,7 +1,25 @@
 {% extends "hod/base.html" %}
 {% block content %}
-<main class="home-container">
-  <h1>Welcome to the HOD Home Page</h1>
-  <p>This is the home page for the Head of Department.</p>
-</main>
+<div class="timetable-container">
+  <h1>Welcome to the HOD Dashboard</h1>
+  <div class="card-grid">
+    <div class="card">
+      <h3>Manage Courses</h3>
+      <p>Create, update, and delete courses for your department.</p>
+      <a href="{% url 'hod-manage-courses' %}" class="btn btn-primary">Go to Courses</a>
+    </div>
+    
+    <div class="card">
+      <h3>View Timetable</h3>
+      <p>View and analyze department timetables and schedules.</p>
+      <a href="#" class="btn btn-primary">View Timetable</a>
+    </div>
+    
+    <div class="card">
+      <h3>Profile Settings</h3>
+      <p>Update your profile information and preferences.</p>
+      <a href="#" class="btn btn-primary">My Profile</a>
+    </div>
+  </div>
+</div>
 {% endblock %}

@@ -15,8 +15,15 @@ class Department(models.Model):
         limit_choices_to={'role': 'teacher'},
         related_name='hod_of_department'
     )
+
     def __str__(self):
         return f"{self.name} ({self.code})"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        # Create 4 batches for the department if they don't already exist
+        for year in range(1, 5):
+            Batch.objects.get_or_create(department=self, year=year)
 
 
 # -----------------------------------------------------------------------------
@@ -39,6 +46,12 @@ class User(AbstractUser):
 
     def __str__(self):
         return f"{self.username} ({self.role})"
+    
+    def save(self, *args, **kwargs):
+        # Ensure that the user has a department only if they are not an admin
+        if self.role == 'admin':
+            self.department = None
+        super().save(*args, **kwargs)
 
     
 # -----------------------------------------------------------------------------
@@ -149,8 +162,7 @@ class Student(models.Model):
             - Core courses from the batch
             - Elective courses
         """
-
-        core_courses = self.batch.courses.filter(course_type='core')
+        core_courses = self.batch.courses.all()
         elective_courses = self.elective_courses.all()
         return list(core_courses) + list(elective_courses)
 

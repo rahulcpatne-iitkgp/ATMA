@@ -1,0 +1,50 @@
+{% extends 'timetable/base.html' %}
+{% load custom_filters %}
+{% block content %}
+<div class="timetable-container">
+  <h1>Your Weekly Timetable</h1>
+  
+  {% if student %}
+    <h3>Student: {{ student.user.username }}</h3>
+    <h4>Batch: {{ student.batch }}</h4>
+
+    <div class="timetable">
+      <table class="timetable-table">
+        <thead>
+            <tr>
+                <th>Day</th>
+                {% for slot_id, slot_name in time_slots.items %}
+                    <th>{{ slot_name }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+          {% for day in days_of_week %}
+            <tr>
+              <td><strong>{{ day }}</strong></td>
+              {% for slot_id, slot_name in time_slots.items %}
+                <td>
+                  {% if timetable_data|get_item:day|get_item:slot_id %}
+                    {% with schedule=timetable_data|get_item:day|get_item:slot_id %}
+                      <div class="course-card">
+                        <strong>{{ schedule.course.code }}</strong>
+                        <div>Room: {{ schedule.classroom.name }}</div>
+                      </div>
+                    {% endwith %}
+                  {% else %}
+                    <div class="empty-slot">-</div>
+                  {% endif %}
+                </td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+      <div class="alert alert-warning">
+          You must be a student to view your timetable.
+      </div>
+  {% endif %}
+</div>
+{% endblock %}

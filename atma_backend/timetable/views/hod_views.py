@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from ..forms import CreateCourseForm
 from ..models import Course, TimeSlot, Classroom, Schedule
 from django.contrib import messages
@@ -15,7 +15,7 @@ def manage_courses(request):
     else:
         # Redirect to home if not authorized
         return redirect('home')
-    
+
 def create_course(request):
     # Check if the user is authenticated and is a HOD
     if request.user.is_authenticated and hasattr(request.user, 'department') and request.user == request.user.department.hod:
@@ -25,6 +25,7 @@ def create_course(request):
                 course = form.save(commit=False)
                 course.department = request.user.department
                 course.save()
+                form.save_m2m()  # This saves the many-to-many data (batches)
                 return redirect('hod-manage-courses')
             else:
                 # Handle form errors
@@ -37,7 +38,32 @@ def create_course(request):
     else:
         # Redirect to home if not authorized
         return redirect('home')
-    
+
+def update_course(request, course_id):
+    # Check if the user is authenticated and is a HOD
+    if request.user.is_authenticated and hasattr(request.user, 'department') and request.user == request.user.department.hod:
+        try:
+            course = Course.objects.get(id=course_id, department=request.user.department)
+        except Course.DoesNotExist:
+            return redirect('hod-manage-courses')
+        
+        if request.method == 'POST':
+            form = CreateCourseForm(request.POST, instance=course, request=request)
+            if form.is_valid():
+                form.save()
+                return redirect('hod-manage-courses')
+            else:
+                # Handle form errors
+                context = {'form': form}
+                return render(request, 'hod/create_course.html', context)
+        
+        form = CreateCourseForm(instance=course, request=request)
+        context = {'form': form}
+        return render(request, 'hod/create_course.html', context)
+    else:
+        # Redirect to home if not authorized
+        return redirect('home')
+
 def schedule_course(request, course_id):
     # Check if the user is authenticated and is a HOD
     if request.user.is_authenticated and hasattr(request.user, 'department') and request.user == request.user.department.hod:
@@ -156,7 +182,7 @@ def schedule_course(request, course_id):
     else:
         # Redirect to home if not authorized
         return redirect('home')
-    
+
 def delete_course(request, course_id):
     # Check if the user is authenticated and is a HOD
     if request.user.is_authenticated and hasattr(request.user, 'department') and request.user == request.user.department.hod:

@@ -1,9 +1,10 @@
 {% extends 'timetable/base.html' %}
 
+{% load custom_filters %}
 {% block content %}
 <div class="signup-container">
     <div class="signup-form">
-        <h2>Create an Account</h2>
+        <h2 class="form-heading">Create an Account</h2>
         <form method="post">
             {% csrf_token %}
             
@@ -16,8 +17,8 @@
             {% endif %}
             
             <div class="form-group">
-                <label for="id_username">Username:</label>
-                {{ form.username }}
+                <label for="id_username" class="form-label">Username:</label>
+                {{ form.username|add_class:"form-input" }}
                 {% if form.username.errors %}
                 <div class="error-feedback">
                     {% for error in form.username.errors %}
@@ -28,8 +29,8 @@
             </div>
             
             <div class="form-group">
-                <label for="id_password1">Password:</label>
-                {{ form.password1 }}
+                <label for="id_password1" class="form-label">Password:</label>
+                {{ form.password1|add_class:"form-input" }}
                 {% if form.password1.errors %}
                 <div class="error-feedback">
                     {% for error in form.password1.errors %}
@@ -43,8 +44,8 @@
             </div>
             
             <div class="form-group">
-                <label for="id_password2">Confirm Password:</label>
-                {{ form.password2 }}
+                <label for="id_password2" class="form-label">Confirm Password:</label>
+                {{ form.password2|add_class:"form-input" }}
                 {% if form.password2.errors %}
                 <div class="error-feedback">
                     {% for error in form.password2.errors %}
@@ -55,8 +56,8 @@
             </div>
             
             <div class="form-group">
-                <label for="id_role">Role:</label>
-                {{ form.role }}
+                <label for="id_role" class="form-label">Role:</label>
+                {{ form.role|add_class:"form-input" }}
                 {% if form.role.errors %}
                 <div class="error-feedback">
                     {% for error in form.role.errors %}
@@ -67,8 +68,8 @@
             </div>
             
             <div class="form-group">
-                <label for="id_department">Department:</label>
-                {{ form.department }}
+                <label for="id_department" class="form-label">Department:</label>
+                {{ form.department|add_class:"form-input" }}
                 {% if form.department.errors %}
                 <div class="error-feedback">
                     {% for error in form.department.errors %}
@@ -84,7 +85,7 @@
         </form>
         
         <div class="form-footer">
-            <p>Already have an account? <a href="{% url 'login' %}">Log In</a></p>
+            <p>Already have an account? <a href="{% url 'login' %}" class="link">Log In</a></p>
         </div>
     </div>
 </div>

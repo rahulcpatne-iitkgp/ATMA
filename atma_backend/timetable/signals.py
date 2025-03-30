@@ -1,6 +1,6 @@
 from django.db.models.signals import post_migrate
 from django.dispatch import receiver
-from .models import TimeSlot
+from .models import TimeSlot, Department, Batch
 
 @receiver(post_migrate)
 def populate_timeslots(sender, **kwargs):
@@ -30,3 +30,17 @@ def populate_timeslots(sender, **kwargs):
                 slot=slot,
             )
     print("TimeSlots populated successfully.")
+
+@receiver(post_migrate)
+def populate_batches(sender, **kwargs):
+    if sender.name != "timetable":
+        return
+
+    departments = Department.objects.all()
+    for department in departments:
+        for year in range(1, 4):  # Assuming 4 years of batches
+            Batch.objects.get_or_create(
+                department=department,
+                year=year,
+            )
+    print("Batches populated successfully.")

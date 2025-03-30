@@ -1,9 +1,8 @@
-{% extends 'main.html' %}
+{% extends 'timetable/base.html' %}
 
 {% block content %}
 <div class="home-container">
     <h1>Welcome to ATMA</h1>
     <p>This is the home page, accessible only to logged-in users.</p>
-    <a href="{% url 'logout' %}" class="btn btn-primary">Logout</a>
 </div>
 {% endblock %}
