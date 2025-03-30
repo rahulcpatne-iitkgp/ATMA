@@ -1,0 +1,55 @@
+<div class="modal-content">
+  <span class="close" onclick="document.getElementById('course-detail-modal').style.display='none'">&times;</span>
+  
+  <h3>{{ course.name }} <span class="course-code">({{ course.code }})</span></h3>
+  
+  <div class="course-details">
+    <div class="detail-row">
+      <div class="detail-label">Credits:</div>
+      <div class="detail-value">{{ course.credits }}</div>
+    </div>
+    
+    <div class="detail-row">
+      <div class="detail-label">Instructor:</div>
+      <div class="detail-value">{{ course.teacher.first_name }} {{ course.teacher.last_name }}</div>
+    </div>
+    
+    <div class="detail-row">
+      <div class="detail-label">Department:</div>
+      <div class="detail-value">{{ course.department.name }}</div>
+    </div>
+    
+    <h4>Schedule</h4>
+    <ul class="schedule-list">
+      {% for schedule in course.schedules.all %}
+        <li>
+          <span class="day">{{ schedule.timeslot.day }}</span>
+          <span class="time">{{ schedule.timeslot.start_time|time:"H:i" }} - {{ schedule.timeslot.end_time|time:"H:i" }}</span>
+          <span class="room">Room: {{ schedule.classroom.name }}</span>
+        </li>
+      {% empty %}
+        <li>No schedules defined yet</li>
+      {% endfor %}
+    </ul>
+    
+    <h4>Batches</h4>
+    <ul class="batch-list">
+      {% for batch in course.batches.all %}
+        <li>{{ batch }}</li>
+      {% empty %}
+        <li>No batches assigned</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+<script>
+  // Make sure the modal is displayed
+  var modal = document.getElementById('course-detail-modal');
+  if (modal) {
+    modal.style.display = 'block';
+    console.log('Modal should be visible now');
+  } else {
+    console.error('Modal element not found');
+  }
+</script>

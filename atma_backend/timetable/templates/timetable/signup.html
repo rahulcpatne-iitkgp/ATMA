@@ -18,10 +18,39 @@
             
             <div class="form-group">
                 <label for="id_username" class="form-label">Username:</label>
-                {{ form.username|add_class:"form-input" }}
+                {% with full_url="hx-post:"|add:check_username_url %}
+                    {{ form.username|add_class:"form-input"|attr:full_url|attr:"hx-trigger:keyup changed delay:500ms"|attr:"hx-target:#username-feedback" }}
+                {% endwith %}
+                <div id="username-feedback"></div>
                 {% if form.username.errors %}
                 <div class="error-feedback">
                     {% for error in form.username.errors %}
+                    <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- First Name Field -->
+            <div class="form-group">
+                <label for="id_first_name" class="form-label">First Name:</label>
+                {{ form.first_name|add_class:"form-input" }}
+                {% if form.first_name.errors %}
+                <div class="error-feedback">
+                    {% for error in form.first_name.errors %}
+                    <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Last Name Field -->
+            <div class="form-group">
+                <label for="id_last_name" class="form-label">Last Name:</label>
+                {{ form.last_name|add_class:"form-input" }}
+                {% if form.last_name.errors %}
+                <div class="error-feedback">
+                    {% for error in form.last_name.errors %}
                     <p>{{ error }}</p>
                     {% endfor %}
                 </div>

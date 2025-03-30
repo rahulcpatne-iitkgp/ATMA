@@ -3,9 +3,19 @@
 {% block content %}
 <div class="timetable-container">
   <h1>Your Weekly Timetable</h1>
-  
+
+  <div class="filter-controls">
+    <button class="btn btn-primary" id="print-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M5 1a2 2 0 0 0-2 2v1h10V3a2 2 0 0 0-2-2H5zm6 8H5a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1z"/>
+        <path d="M0 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-1v-2a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2H2a2 2 0 0 1-2-2V7zm2.5 1a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
+      </svg>
+      Print Timetable
+    </button>
+  </div>
+
   {% if student %}
-    <h3>Student: {{ student.user.username }}</h3>
+    <h3>Student: {{ student.user.first_name }} {{ student.user.last_name }}</h3>
     <h4>Batch: {{ student.batch }}</h4>
 
     <div class="timetable">
@@ -26,10 +36,13 @@
                 <td>
                   {% if timetable_data|get_item:day|get_item:slot_id %}
                     {% with schedule=timetable_data|get_item:day|get_item:slot_id %}
-                      <div class="course-card">
-                        <strong>{{ schedule.course.code }}</strong>
-                        <div>Room: {{ schedule.classroom.name }}</div>
-                      </div>
+                    <div class="course-card" 
+                        hx-get="{% url 'course_detail' schedule.course.id %}" 
+                        hx-target="#course-detail-modal" 
+                        hx-trigger="click">
+                      <strong>{{ schedule.course.code }}</strong>
+                      <div>{{ schedule.classroom.name }}</div>
+                    </div>
                     {% endwith %}
                   {% else %}
                     <div class="empty-slot">-</div>
@@ -47,4 +60,38 @@
       </div>
   {% endif %}
 </div>
+
+<div id="course-detail-modal" class="modal">
+  <!-- Course details will be loaded here -->
+</div>
+
+<script>
+
+  document.getElementById('print-btn').addEventListener('click', function() {
+    window.print();
+  });
+  
+  // Close modal when clicking outside of it
+  window.addEventListener('click', function(event) {
+    const modal = document.getElementById('course-detail-modal');
+    if (event.target === modal) {
+      modal.style.display = 'none';
+    }
+  });
+  
+  // Close modal when mouse leaves the modal
+  document.getElementById('course-detail-modal').addEventListener('mouseleave', function(event) {
+    // Only close if we're not inside a card (to prevent flicker when moving between card and modal)
+    if (!event.relatedTarget || !event.relatedTarget.closest('.course-card')) {
+      this.style.display = 'none';
+    }
+  });
+  
+  // Add keyboard support for closing modal with escape key
+  document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+      document.getElementById('course-detail-modal').style.display = 'none';
+    }
+  });
+</script>
 {% endblock %}

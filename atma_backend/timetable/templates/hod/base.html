@@ -9,13 +9,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ATMA-HOD</title>
-
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <script src="https://unpkg.com/htmx.org@1.9.11" integrity="sha384-0gxUXCCR8yv9FM2b+U3FDbsKthCI66oH5IA9fHppQq9DDMHuMauHD4eHJHqUYAOK" crossorigin="anonymous"></script>
 </head>
 <body>
   <nav class="navbar">
     <div class="navbar-brand">
-      <a href="{% url 'home' %}">{{ user.department }} Dashboard</a>
+      <a href="{% url 'home' %}">{{ user.first_name }} {{ user.last_name }} - HOD {{ user.department }}</a>
     </div>
     
     <div class="navbar-menu">
@@ -32,11 +32,29 @@
       </button>
     </div>
   </nav>
+
+  {% if messages %}
+  <div class="messages-container">
+    {% for message in messages %}
+      <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+        <div class="message-content">{{ message }}</div>
+        <button class="message-close" onclick="this.parentElement.remove()">&times;</button>
+      </div>
+    {% endfor %}
+  </div>
+  {% endif %}
   
   <div class="container">
-    <div class="welcome-banner">
-      <h2>Welcome, {{ user.username }}</h2>
+    {% if messages %}
+    <div class="messages-container">
+      {% for message in messages %}
+        <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+          <div class="message-content">{{ message }}</div>
+          <button class="message-close" onclick="this.parentElement.remove()">&times;</button>
+        </div>
+      {% endfor %}
     </div>
+    {% endif %}
     
     {% block content %}
     {% endblock %}
@@ -59,6 +77,23 @@
       document.documentElement.setAttribute('data-theme', newTheme);
       localStorage.setItem('theme', newTheme);
       themeText.textContent = newTheme === 'dark' ? 'Light Mode' : 'Dark Mode';
+    });
+    // Auto-dismiss messages after 5 seconds
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(function() {
+        const messages = document.querySelectorAll('.message');
+        messages.forEach(function(message, index) {
+          // Stagger the dismissal slightly
+          setTimeout(function() {
+            message.style.transform = 'translateX(120%)';
+            message.style.opacity = '0';
+            message.style.transition = 'transform 0.5s ease, opacity 0.5s ease';
+            setTimeout(function() {
+              message.remove();
+            }, 500);
+          }, index * 150);
+        });
+      }, 5000);
     });
   </script>
 </body>

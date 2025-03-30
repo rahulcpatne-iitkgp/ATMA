@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.urls import reverse
 from ..forms import CustomUserCreationForm, CustomAuthenticationForm
 from ..models import Batch, Student
 
@@ -55,7 +56,13 @@ def signup_view(request):
                 return redirect('home')  # Redirect to a success page.
     else:
         form = CustomUserCreationForm()
-    return render(request, 'timetable/signup.html', {'form': form})
+    
+    check_username_url = reverse('check_username')
+    
+    return render(request, 'timetable/signup.html', {
+        'form': form,
+        'check_username_url': check_username_url,
+    })
 
 def logout_view(request):
     logout(request)

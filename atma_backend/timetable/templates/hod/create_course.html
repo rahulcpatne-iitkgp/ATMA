@@ -1,7 +1,8 @@
 {% extends "hod/base.html" %}
+{% load static %}
 {% block content %}
 <div class="timetable-container">
-  <h1>Create New Course</h1>
+  <h1>{{task}} Course</h1>
   
   <div class="form-container">
     <form method="POST" class="signup-form">
@@ -10,7 +11,20 @@
       {% for field in form %}
         <div class="form-group">
           <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
-          {{ field }}
+          
+          {% if field.name == 'batches' %}
+            <div class="checkbox-group">
+              {% for checkbox in field %}
+                <div class="checkbox-item">
+                  {{ checkbox.tag }}
+                  <label for="{{ checkbox.id_for_label }}">{{ checkbox.choice_label }}</label>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            {{ field }}
+          {% endif %}
+          
           {% if field.help_text %}
             <small class="password-help">{{ field.help_text }}</small>
           {% endif %}
@@ -29,4 +43,7 @@
     </form>
   </div>
 </div>
+
+<!-- Include the JavaScript file -->
+<script src="{% static 'js/form-controls.js' %}"></script>
 {% endblock %}

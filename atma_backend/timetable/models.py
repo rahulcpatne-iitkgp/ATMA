@@ -45,7 +45,7 @@ class User(AbstractUser):
     )
 
     def __str__(self):
-        return f"{self.username} ({self.role})"
+        return f"{self.first_name} {self.last_name} ({self.username})"
     
     def save(self, *args, **kwargs):
         # Ensure that the user has a department only if they are not an admin

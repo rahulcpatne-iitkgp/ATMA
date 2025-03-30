@@ -7,86 +7,34 @@
   <h1>Manage Courses</h1>
   
   <div class="action-bar">
-    <a href="{% url 'hod-create-course' %}" class="btn btn-primary">
+    <button class="btn btn-primary"
+            hx-get="{% url 'htmx-create-course' %}"
+            hx-target="#modal-content"
+            hx-trigger="click"
+            onclick="showModal()">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
         <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"/>
       </svg>
       Create New Course
-    </a>
+    </button>
   </div>
   
-  <div class="course-list">
-    <div class="table-responsive">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Code</th>
-            <th>Credits</th>
-            <th>Teacher</th>
-            <th>Batches</th>
-            <th>TimeSlots</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for course in courses %}
-            <tr>
-              <td>{{ course.name }}</td>
-              <td><span>{{ course.code }}</span></td>
-              <td>{{ course.credits }}</td>
-              <td>{{ course.teacher }}</td>
-              <td>
-                {% for batch in course.batches.all %}
-                  <span>{{ batch }}</span><br>
-                {% endfor %}
-              </td>
-              <td>
-                {% if course.schedules.exists %}
-                  {% for day in "Monday,Tuesday,Wednesday,Thursday,Friday"|split:"," %}
-                    {% with day_schedules=course.schedules.all|filter_by_day:day %}
-                      {% if day_schedules %}
-                        <div class="schedule-item">
-                          {% for schedule in day_schedules %}
-                            <span>{{ schedule.timeslot }} in {{ schedule.classroom.name }}</span><br>
-                          {% endfor %}
-                        </div>
-                      {% endif %}
-                    {% endwith %}
-                  {% endfor %}
-                {% else %}
-                  <form method="post" action="{% url 'hod-schedule-course' course.id %}">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-success">Add to timetable</button>
-                  </form>
-                {% endif %}
-              </td>
-              <td class="action-buttons">
-                <div class="btn-group">
-                  <a href="{% url 'hod-update-course' course.id %}" class="btn btn-secondary">Edit</a>
-                  <button type="button" class="btn btn-danger" onclick="confirmDelete('{{ course.name }}', '{{ course.id }}')">Delete</button>
-                </div>
-                
-                <form method="post" action="{% url 'hod-delete-course' course.id %}" id="delete-form-{{ course.id }}" style="display:none;">
-                  {% csrf_token %}
-                </form>
-              </td>
-            </tr>
-          {% empty %}
-            <tr>
-              <td colspan="7" class="text-center">
-                <div class="empty-state">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                    <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
-                  </svg>
-                  <p>No courses available. Create your first course to get started.</p>
-                </div>
-              </td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+  <div id="course-list-container">
+    {% include 'hod/partials/course_list.html' %}
+  </div>
+</div>
+
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<div class="modal" id="courseModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      {% include 'hod/partials/course_form.html' %}
     </div>
   </div>
 </div>
@@ -97,5 +45,26 @@ function confirmDelete(courseName, courseId) {
     document.getElementById(`delete-form-${courseId}`).submit();
   }
 }
+
+function showModal() {
+  document.getElementById('modal').style.display = 'block';
+}
+
+function closeModal() {
+  document.getElementById('modal').style.display = 'none';
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+  const modal = document.getElementById('modal');
+  if (event.target == modal) {
+    closeModal();
+  }
+}
+
+// Add to your manage_courses.html in the script section
+document.body.addEventListener('closeModal', function() {
+    closeModal();
+});
 </script>
 {% endblock %}
