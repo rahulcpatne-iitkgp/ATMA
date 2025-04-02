@@ -4,7 +4,23 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.urls import reverse
 from ..forms import CustomUserCreationForm, CustomAuthenticationForm
-from ..models import Batch, Student
+from ..models import Batch, Student, User
+from django.http import HttpResponse
+
+# Authentication and checking functions
+def check_username(request):
+    """Check if username is available"""
+    username = request.POST.get('username', '')
+    if not username:
+        return HttpResponse("")
+    
+    if User.objects.filter(username=username).exists():
+        return HttpResponse(
+            '<div class="error-feedback">Username already taken</div>'
+        )
+    return HttpResponse(
+        '<div class="success-feedback">Username available</div>'
+    )
 
 @login_required
 def home(request):
