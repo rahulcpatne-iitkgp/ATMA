@@ -14,7 +14,7 @@ urlpatterns = [
 
     # HTMX endpoints
     path('check-username/', hod_views.check_username, name='check_username'),
-    path('course-detail/<str:course_id>/', hod_views.course_detail, name='course_detail'),
+    path('course-detail/<str:course_id>/', student_views.course_detail, name='course_detail'),
     path('htmx/courses/<int:course_id>/edit/', hod_views.htmx_update_course, name='htmx-edit-course'),
     path('htmx/courses/create/', hod_views.htmx_create_course, name='htmx-create-course'),
 ]

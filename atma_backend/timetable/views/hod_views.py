@@ -20,15 +20,6 @@ def check_username(request):
         '<div class="success-feedback">Username available</div>'
     )
 
-# Course detail view
-@login_required
-def course_detail(request, course_id):
-    """Return course details for modal display"""
-    course = get_object_or_404(Course, id=course_id)
-    
-    return render(request, 'timetable/partials/course_detail.html', {
-        'course': course
-    })
 
 # HOD views for course management
 def manage_courses(request):

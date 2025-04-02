@@ -43,7 +43,7 @@ def home(request):
     if request.user.role == 'teacher' and request.user.department and hasattr(request.user.department, 'hod') and request.user == request.user.department.hod:
         return render(request, 'hod/home.html', context)
     
-    return render(request, 'timetable/home.html', context)
+    return render(request, 'student/home.html', context)
 
 def login_view(request):
     if request.method == 'POST':
@@ -57,7 +57,7 @@ def login_view(request):
                 return redirect('home')  # Redirect to a success page.
     else:
         form = CustomAuthenticationForm()
-    return render(request, 'timetable/login.html', {'form': form})
+    return render(request, 'authentication/login.html', {'form': form})
 
 def signup_view(request):
     if request.method == 'POST':
@@ -75,7 +75,7 @@ def signup_view(request):
     
     check_username_url = reverse('check_username')
     
-    return render(request, 'timetable/signup.html', {
+    return render(request, 'authentication/signup.html', {
         'form': form,
         'check_username_url': check_username_url,
     })
@@ -114,4 +114,4 @@ def select_batch(request):
     # Get available batches for this student's department
     batches = Batch.objects.filter(department=request.user.department)
     
-    return render(request, 'timetable/select_batch.html', {'batches': batches})
+    return render(request, 'student/select_batch.html', {'batches': batches})

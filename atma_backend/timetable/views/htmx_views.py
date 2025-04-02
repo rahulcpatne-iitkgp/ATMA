@@ -24,7 +24,7 @@ def course_detail(request, course_id):
     """Return course details for modal display"""
     course = get_object_or_404(Course, id=course_id)
     
-    return render(request, 'timetable/partials/course_detail.html', {
+    return render(request, 'student/partials/course_detail.html', {
         'course': course
     })
 

@@ -1,8 +1,8 @@
 # Add this to your existing views file
-
+from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from ..models import Student, TimeSlot, Schedule
+from ..models import Student, TimeSlot, Schedule, Course
 
 @login_required
 def view_timetable(request):
@@ -53,4 +53,14 @@ def view_timetable(request):
             'timetable_data': timetable_data
         })
 
-    return render(request, 'timetable/timetable.html', context)
+    return render(request, 'student/timetable.html', context)
+
+# Course detail view
+@login_required
+def course_detail(request, course_id):
+    """Return course details for modal display"""
+    course = get_object_or_404(Course, id=course_id)
+    
+    return render(request, 'student/partials/course_detail.html', {
+        'course': course
+    })
