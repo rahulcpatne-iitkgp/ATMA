@@ -5,7 +5,7 @@
 <div class="signup-container">
     <div class="signup-form">
         <h2 class="form-heading">Create an Account</h2>
-        <form method="post">
+        <form method="post" autocomplete="off">
             {% csrf_token %}
             
             {% if form.non_field_errors %}
@@ -118,4 +118,26 @@
         </div>
     </div>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      // Get all form input elements
+      const formInputs = document.querySelectorAll('.form-input');
+      
+      // Add event listeners to each input
+      formInputs.forEach(input => {
+          input.addEventListener('input', function() {
+              // Find the closest form-group parent
+              const formGroup = this.closest('.form-group');
+              if (formGroup) {
+                  // Find and hide error feedback div within this form group
+                  const errorDiv = formGroup.querySelector('.error-feedback');
+                  if (errorDiv) {
+                      errorDiv.style.display = 'none';
+                  }
+              }
+          });
+      });
+  });
+</script>
 {% endblock %}

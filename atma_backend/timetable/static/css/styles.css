@@ -434,6 +434,29 @@ a.btn-secondary:hover {
   border-left: 4px solid #f87171;
 }
 
+/* Success feedback styles */
+.success-feedback {
+  background-color: #f0fdf4;
+  margin-top: 1rem;
+  color: var(--success);
+  border-left: 4px solid var(--success);
+  padding: 1rem;
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.success-feedback p {
+  margin: 0;
+}
+
+/* Success styles for dark mode */
+[data-theme="dark"] .success-feedback {
+  background-color: #132e22; /* A darker shade of green to blend with dark backgrounds */
+  color: #86efac; /* Light green text for dark mode */
+  border-left: 4px solid #4ade80; /* Medium green border for dark mode */
+}
+
 .password-help {
   font-size: 0.85rem;
   color: var(--text-muted);
