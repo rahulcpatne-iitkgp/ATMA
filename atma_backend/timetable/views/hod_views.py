@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from ..models import User, Course, Schedule, TimeSlot, Classroom
 from ..forms import CreateCourseForm
+from django.urls import reverse
 
 # Authentication and checking functions
 def check_username(request):
@@ -200,17 +201,17 @@ def htmx_update_course(request, course_id):
                 # Remove all schedules associated with the course
                 Schedule.objects.filter(course=course).delete()
                 messages.warning(request, "Course schedules have been reset due to changes in credits, teacher, or batches.")
+            else:
+                # Only show success message if schedules weren't reset
+                messages.success(request, f"Course '{updated_course.name}' updated successfully!")
             
             # Save the updated course and its many-to-many relationships
             updated_course.save()
             form.save_m2m()
             
-            # Return the updated course list
-            courses = request.user.department.courses.all()
-            response = render(request, 'hod/partials/course_list.html', {
-                'courses': courses
-            })
-            response['HX-Trigger'] = 'closeModal'
+            # Redirect to manage courses page to show toast notifications
+            response = HttpResponse()
+            response['HX-Redirect'] = reverse('hod-manage-courses')
             return response
     else:
         form = CreateCourseForm(instance=course, request=request)
@@ -234,12 +235,12 @@ def htmx_create_course(request):
             course.save()
             form.save_m2m()  # Save the many-to-many data (batches)
             
-            # Return the updated course list
-            courses = request.user.department.courses.all()
-            response = render(request, 'hod/partials/course_list.html', {
-                'courses': courses
-            })
-            response['HX-Trigger'] = 'closeModal'
+            # Add success message
+            messages.success(request, f"Course '{course.name}' created successfully!")
+            
+            # Redirect to manage courses page to show toast notifications
+            response = HttpResponse()
+            response['HX-Redirect'] = reverse('hod-manage-courses')
             return response
     else:
         form = CreateCourseForm(request=request)
