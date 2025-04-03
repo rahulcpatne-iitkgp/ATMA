@@ -17,4 +17,5 @@ urlpatterns = [
     path('course-detail/<str:course_id>/', student_views.course_detail, name='course_detail'),
     path('htmx/courses/<int:course_id>/edit/', hod_views.htmx_update_course, name='htmx-edit-course'),
     path('htmx/courses/create/', hod_views.htmx_create_course, name='htmx-create-course'),
+    path('hod/htmx/course-list/', hod_views.htmx_course_list, name='htmx-course-list'),
 ]

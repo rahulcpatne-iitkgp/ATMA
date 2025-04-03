@@ -246,3 +246,19 @@ def htmx_create_course(request):
     
     context = {'form': form, 'task': 'Create'}
     return render(request, 'hod/partials/course_form.html', context)
+
+@login_required
+def htmx_course_list(request):
+    """Return the updated course list partial for HTMX requests"""
+    # Check if user is HOD of the department
+    if not (hasattr(request.user, 'department') and 
+            request.user == request.user.department.hod):
+        return HttpResponse("Unauthorized", status=403)
+    
+    # Fetch courses for the HOD's department
+    courses = request.user.department.courses.all()
+    
+    # Render only the course list partial
+    return render(request, 'hod/partials/course_list.html', {
+        'courses': courses
+    })

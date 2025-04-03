@@ -1,6 +1,9 @@
 <form hx-post="{% if course %}{% url 'htmx-edit-course' course.id %}{% else %}{% url 'htmx-create-course' %}{% endif %}"
       hx-target="#course-list-container"
-      hx-swap="outerHTML"
+      hx-swap="innerHTML"
+      hx-on::after-request="if(!event.detail.xhr.responseText.includes('error-feedback')) { 
+        document.dispatchEvent(new CustomEvent('closeModal'));
+      }"
       class="course-form">
   {% csrf_token %}
   <h2>{{ task }} Course</h2>
@@ -19,7 +22,7 @@
           {% endfor %}
         </div>
       {% else %}
-        {{ field }}
+        {{ field.as_widget }}
       {% endif %}
       
       {% if field.help_text %}
