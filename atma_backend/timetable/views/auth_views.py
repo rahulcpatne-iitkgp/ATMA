@@ -35,14 +35,14 @@ def home(request):
         
         if not has_profile:
             if request.user.department:
-                return redirect('select_batch')
+                # Instead of redirecting, add batches to context to display in modal
+                batches = Batch.objects.filter(department=request.user.department)
+                context['batches'] = batches
+                context['needs_batch_selection'] = True
             else:
                 messages.error(request, "Your account doesn't have a department. Please contact admin.")
     
     # Existing code for HOD redirect
-    if request.user.role == 'teacher' and request.user.department and hasattr(request.user.department, 'hod') and request.user == request.user.department.hod:
-        return render(request, 'hod/home.html', context)
-    
     return render(request, 'student/home.html', context)
 
 def login_view(request):
@@ -86,14 +86,7 @@ def logout_view(request):
 
 @login_required
 def select_batch(request):
-    # Only allow students without a profile to access this page
-    if not request.user.role == 'student' or hasattr(request.user, 'student_profile'):
-        return redirect('home')
-    
-    if not request.user.department:
-        messages.error(request, "Your account doesn't have a department assigned. Please contact admin.")
-        return redirect('home')
-        
+    # Only handle POST requests
     if request.method == 'POST':
         batch_id = request.POST.get('batch_id')
         if batch_id:
@@ -108,10 +101,7 @@ def select_batch(request):
             except Batch.DoesNotExist:
                 messages.error(request, "Invalid batch selected.")
             except Exception as e:
-                # Add general exception handling to help with debugging
                 messages.error(request, f"Error creating student profile: {str(e)}")
     
-    # Get available batches for this student's department
-    batches = Batch.objects.filter(department=request.user.department)
-    
-    return render(request, 'student/select_batch.html', {'batches': batches})
+    # Redirect to home to show the modal again
+    return redirect('home')

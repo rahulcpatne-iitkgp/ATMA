@@ -1143,3 +1143,84 @@ html[data-theme="dark"] .info {
   margin-top: 4px;
 }
 
+.modal-backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+.modal-backdrop.active {
+    display: block;
+}
+
+.batch-selection-modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    width: 90%;
+    max-width: 600px;
+}
+
+.batch-selection-modal.active {
+    display: block;
+}
+
+/* Batch selection card styles */
+.batch-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Decreased the minimum size */
+    gap: 10px; /* Reduced the gap between cards */
+    margin-bottom: 20px;
+}
+
+.batch-card {
+    display: block;
+    padding: 15px; /* Reduced padding for a more compact look */
+    border: 1px solid var(--border-color); /* Use default border color */
+    border-radius: 6px; /* Slightly smaller border radius */
+    cursor: pointer;
+    transition: all 0.2s ease; /* Slightly faster transition */
+    text-align: center;
+    background-color: var(--card-bg); /* Use default card background color */
+    color: var(--text-primary); /* Use default text color */
+    box-shadow: var(--shadow-sm); /* Subtle shadow for a formal look */
+}
+
+.batch-card:hover {
+    border-color: var(--primary-light); /* Subtle hover effect */
+    box-shadow: var(--shadow-md); /* Slightly more prominent shadow on hover */
+    transform: translateY(-2px); /* Subtle lift effect */
+}
+
+.batch-card.selected {
+    border-color: var(--primary); /* Highlight selected card with primary color */
+    background-color: var(--background); /* Use default background color for selection */
+    box-shadow: var(--shadow-md); /* Slightly more prominent shadow */
+}
+
+.batch-name {
+    font-weight: 600; /* Slightly bolder font for emphasis */
+    font-size: 1rem; /* Reduced font size for a formal look */
+    margin-bottom: 5px;
+}
+
+.batch-year {
+    color: var(--text-secondary); /* Use secondary text color */
+    font-size: 0.9rem; /* Slightly smaller font size */
+}
+
+.hidden-radio {
+    display: none; /* Hide the actual radio button */
+}
