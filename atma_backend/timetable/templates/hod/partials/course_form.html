@@ -1,9 +1,6 @@
 <form hx-post="{% if course %}{% url 'htmx-edit-course' course.id %}{% else %}{% url 'htmx-create-course' %}{% endif %}"
       hx-target="this"
-      hx-swap="innerHTML"
-      hx-on::after-request="if(!event.detail.xhr.responseText.includes('error-feedback')) { 
-        document.dispatchEvent(new CustomEvent('closeModal'));
-      }"
+      hx-swap="outerHTML"
       class="course-form">
   {% csrf_token %}
   <h2>{{ task }} Course</h2>
