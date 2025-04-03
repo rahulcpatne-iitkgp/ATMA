@@ -59,7 +59,10 @@ class User(AbstractUser):
 # -----------------------------------------------------------------------------
 class Batch(models.Model):
     department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='batches')
-    year = models.IntegerField()    # Year of study (e.g., 1, 2, 3, 4)
+    year = models.IntegerField()  # Year of study (e.g., 1, 2, 3, 4)
+
+    class Meta:
+        unique_together = ('department', 'year')  # Ensure uniqueness of department and year
 
     def __str__(self):
         return f"{self.department.code} {self.year}"
@@ -209,7 +212,7 @@ class Course(models.Model):
         """
         Check if the course is an elective course for the given student.
         """
-        return self.elective_students.filter(id=student.id).exists()
+        return self.elective_students.filter(user_id=student.user_id).exists()
 
 
 # -----------------------------------------------------------------------------
