@@ -28,21 +28,29 @@ def home(request):
         'user': request.user,
     }
     
-    # Redirect students without profiles to the batch selection page
-    if request.user.is_authenticated and request.user.role == 'student':
-        # Check if student has a profile
-        has_profile = hasattr(request.user, 'student_profile')
+    # Redirect to role-specific home pages
+    if request.user.is_authenticated:
+        if request.user.role == 'student':
+            # Check if student has a profile
+            has_profile = hasattr(request.user, 'student_profile')
+            
+            if not has_profile:
+                if request.user.department:
+                    # Instead of redirecting, add batches to context to display in modal
+                    batches = Batch.objects.filter(department=request.user.department)
+                    context['batches'] = batches
+                    context['needs_batch_selection'] = True
+                else:
+                    messages.error(request, "Your account doesn't have a department. Please contact admin.")
+            return render(request, 'student/home.html', context)
         
-        if not has_profile:
-            if request.user.department:
-                # Instead of redirecting, add batches to context to display in modal
-                batches = Batch.objects.filter(department=request.user.department)
-                context['batches'] = batches
-                context['needs_batch_selection'] = True
-            else:
-                messages.error(request, "Your account doesn't have a department. Please contact admin.")
+        elif request.user.department and request.user == request.user.department.hod:
+            return redirect('hod-manage-courses')
     
-    # Existing code for HOD redirect
+        elif request.user.role == 'teacher':
+            return redirect('teacher_home')
+            
+    # Default home page for other users
     return render(request, 'student/home.html', context)
 
 def login_view(request):

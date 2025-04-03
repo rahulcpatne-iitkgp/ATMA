@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="home-container">
+  <h1>Welcome, Professor {{ user.first_name }} {{ user.last_name }}</h1>
+  <p>This is your teaching dashboard. Here you can view your courses and timetable.</p>
+  
+    <div class="card">
+      <h3>My Courses</h3>
+      <p>View details about the courses you're teaching.</p>
+      <div class="course-list">
+        {% if courses %}
+          <ul>
+            {% for course in courses %}
+              <li class="course-item" 
+                  hx-get="{% url 'teacher_course_detail' course.id %}" 
+                  hx-target="#course-detail-modal" 
+                  hx-trigger="click">
+                {{ course.name }} ({{ course.code }}) - {{ course.credits }} credits
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p>You aren't assigned to teach any courses yet.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+<div id="course-detail-modal" class="modal">
+  <!-- Course details will be loaded here -->
+</div>
+
+<script>
+  // Close modal when clicking outside of it
+  window.addEventListener('click', function(event) {
+    const modal = document.getElementById('course-detail-modal');
+    if (event.target === modal) {
+      modal.style.display = 'none';
+    }
+  });
+  
+  // Close modal when mouse leaves the modal
+  document.getElementById('course-detail-modal').addEventListener('mouseleave', function(event) {
+    // Only close if we're not inside a course item (to prevent flicker when moving between item and modal)
+    if (!event.relatedTarget || !event.relatedTarget.closest('.course-item')) {
+      this.style.display = 'none';
+    }
+  });
+  
+  // Add keyboard support for closing modal with escape key
+  document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+      document.getElementById('course-detail-modal').style.display = 'none';
+    }
+  });
+</script>
+{% endblock %}

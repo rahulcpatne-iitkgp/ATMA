@@ -5,7 +5,15 @@
     <div class="navbar-menu">
         {% if user.is_authenticated %}
             <a href="{% url 'home' %}">Home</a>
-            <a href="{% url 'view_timetable' %}">View Timetable</a>
+            
+            {% if user.role == 'student' %}
+                <a href="{% url 'view_timetable' %}">My Timetable</a>
+            {% elif user.role == 'teacher' %}
+                <a href="{% url 'teacher_timetable' %}">My Timetable</a>
+            {% elif user.department and user == user.department.hod %}
+                <a href="{% url 'hod-manage-courses' %}">Manage Courses</a>
+            {% endif %}
+            
             <a href="{% url 'logout' %}">Logout</a>
         {% else %}
             <a href="{% url 'login' %}">Login</a>

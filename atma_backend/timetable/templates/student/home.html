@@ -2,8 +2,43 @@
 
 {% block content %}
 <div class="home-container">
-  <h1>Welcome to ATMA</h1>
-  <p>This is the home page, accessible only to logged-in users.</p>
+  <h1>Welcome to ATMA</h1>  
+
+  <div class="profile-container">
+    <h2>Your Profile</h2>
+    <div class="profile-card">
+      <div class="profile-header">
+        <div class="profile-avatar">
+          <i class="fa fa-user-circle"></i>
+        </div>
+        <div class="profile-name">
+          <h3>{{ student.user.get_full_name }}</h3>
+          <p>Student ID: {{ student.student_id }}</p>
+        </div>
+      </div>
+      <div class="profile-details">
+        <div class="detail-item">
+          <span class="detail-label">Department:</span>
+          <span class="detail-value">{{ student.department }}</span>
+        </div>
+        {% if student.batch %}
+        <div class="detail-item">
+          <span class="detail-label">Batch:</span>
+          <span class="detail-value">{{ student.batch }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Year:</span>
+          <span class="detail-value">{{ student.batch.year }}</span>
+        </div>
+        {% endif %}
+        <div class="detail-item">
+          <span class="detail-label">Email:</span>
+          <span class="detail-value">{{ student.user.email }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  
     {% if needs_batch_selection %}
     <div class="batch-selection-modal" id="batchSelectionModal">
         <div class="modal-content">
@@ -75,4 +110,63 @@
   </script>
   {% endif %}
 </div>
+
+<style>
+  .profile-container {
+    margin: 20px 0;
+    padding: 15px;
+  }
+  
+  .profile-card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .profile-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .profile-avatar {
+    font-size: 3rem;
+    color: #3498db;
+    margin-right: 20px;
+  }
+  
+  .profile-name h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #333;
+  }
+  
+  .profile-name p {
+    margin: 5px 0 0;
+    color: #666;
+  }
+  
+  .profile-details {
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+  }
+  
+  .detail-item {
+    margin-bottom: 10px;
+    display: flex;
+  }
+  
+  .detail-label {
+    font-weight: bold;
+    min-width: 120px;
+    color: #555;
+  }
+  
+  .detail-value {
+    color: #333;
+  }
+</style>
 {% endblock %}
