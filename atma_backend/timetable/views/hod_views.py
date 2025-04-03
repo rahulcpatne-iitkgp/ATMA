@@ -205,9 +205,12 @@ def htmx_update_course(request, course_id):
             updated_course.save()
             form.save_m2m()
             
-            # Return a simple success response
-            response = HttpResponse("Success")
-            response['HX-Trigger'] = 'courseUpdated closeModal'
+            # Return the updated course list
+            courses = request.user.department.courses.all()
+            response = render(request, 'hod/partials/course_list.html', {
+                'courses': courses
+            })
+            response['HX-Trigger'] = 'closeModal'
             return response
     else:
         form = CreateCourseForm(instance=course, request=request)
@@ -231,9 +234,12 @@ def htmx_create_course(request):
             course.save()
             form.save_m2m()  # Save the many-to-many data (batches)
             
-            # Return a simple success response
-            response = HttpResponse("Success")
-            response['HX-Trigger'] = 'courseUpdated closeModal'
+            # Return the updated course list
+            courses = request.user.department.courses.all()
+            response = render(request, 'hod/partials/course_list.html', {
+                'courses': courses
+            })
+            response['HX-Trigger'] = 'closeModal'
             return response
     else:
         form = CreateCourseForm(request=request)
