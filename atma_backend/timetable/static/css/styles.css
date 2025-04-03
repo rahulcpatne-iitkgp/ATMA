@@ -14,7 +14,7 @@
   --text-muted: #6B7280;
   --border-color: #D1D5DB;
   --danger: #DC2626;
-  --success: #10B981;
+  --success: #0D9A6B;
   --warning: #F59E0B;
   --info: #0EA5E9;
   --heading-accent: #1E3A8A;
@@ -606,6 +606,7 @@ a.btn-secondary:hover {
   margin-top: 2rem;
 }
 
+/* Make timetable column widths uniform */
 .timetable-table {
   width: 100%;
   border-collapse: separate;
@@ -613,13 +614,19 @@ a.btn-secondary:hover {
   box-shadow: var(--shadow-md);
   border-radius: 8px;
   overflow: hidden;
+  table-layout: fixed; /* Ensures equal column widths */
 }
 
+/* Ensure consistent column and row sizing */
 .timetable-table th,
 .timetable-table td {
-  padding: 1rem;
+  padding: 0.75rem;
   border: 1px solid var(--border-color);
   text-align: center;
+  width: 14.28%; /* Equal width for 7 days */
+  height: 80px; /* Fixed row height */
+  box-sizing: border-box;
+  vertical-align: middle;
 }
 
 .timetable-table th {
@@ -639,26 +646,34 @@ a.btn-secondary:hover {
   font-weight: 500;
 }
 
+/* Improve course card appearance */
 .course-card {
   background-color: var(--primary-light);
   color: white;
   border-radius: 6px;
-  padding: 1rem;
-  min-height: 80px;
+  padding: 0.75rem;
+  height: 70%; /* Fixed height instead of min-height */
   display: flex;
   flex-direction: column;
   justify-content: center;
   box-shadow: var(--shadow-sm);
   transition: transform 0.2s ease;
+  font-size: 0.8rem; /* Even smaller text for better containment */
+  line-height: 1.3; /* Tighter line spacing */
+  overflow: hidden; /* Prevent text overflow */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
+/* Adjust hover effect to be more subtle */
 .course-card:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
 }
 
+/* Update empty slot to match course card height */
 .empty-slot {
-  min-height: 80px;
+  height: 80px; /* Fixed height instead of min-height */
   display: flex;
   align-items: center;
   justify-content: center;

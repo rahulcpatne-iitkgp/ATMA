@@ -66,5 +66,12 @@ window.onclick = function(event) {
 document.body.addEventListener('closeModal', function() {
     closeModal();
 });
+
+document.body.addEventListener('courseUpdated', function() {
+    htmx.ajax('GET', '{% url "htmx-course-list" %}', {
+        target: '#course-list-container',
+        swap: 'innerHTML'
+    });
+});
 </script>
 {% endblock %}

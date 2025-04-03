@@ -26,7 +26,7 @@ def view_timetable(request):
         for slot in slots:
             # Get any time slot with this letter to get the time range
             time_slot = TimeSlot.objects.filter(slot=slot).first()
-            time_slots[slot] = f"{slot}: {time_slot.start_time.strftime('%H:%M')} - {time_slot.end_time.strftime('%H:%M')}"
+            time_slots[slot] = f"{time_slot.start_time.strftime('%H:%M')} - {time_slot.end_time.strftime('%H:%M')}"
         
         # Get the days of the week in the correct order
         days_of_week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']

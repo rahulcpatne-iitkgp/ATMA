@@ -205,12 +205,9 @@ def htmx_update_course(request, course_id):
             updated_course.save()
             form.save_m2m()
             
-            # Return the updated course list
-            courses = request.user.department.courses.all()
-            response = render(request, 'hod/partials/course_list.html', {
-                'courses': courses
-            })
-            response['HX-Trigger'] = 'closeModal'
+            # Return a simple success response
+            response = HttpResponse("Success")
+            response['HX-Trigger'] = 'courseUpdated closeModal'
             return response
     else:
         form = CreateCourseForm(instance=course, request=request)
@@ -234,15 +231,28 @@ def htmx_create_course(request):
             course.save()
             form.save_m2m()  # Save the many-to-many data (batches)
             
-            # Return the updated course list
-            courses = request.user.department.courses.all()
-            response = render(request, 'hod/partials/course_list.html', {
-                'courses': courses
-            })
-            response['HX-Trigger'] = 'closeModal'
+            # Return a simple success response
+            response = HttpResponse("Success")
+            response['HX-Trigger'] = 'courseUpdated closeModal'
             return response
     else:
         form = CreateCourseForm(request=request)
     
     context = {'form': form, 'task': 'Create'}
     return render(request, 'hod/partials/course_form.html', context)
+
+@login_required
+def htmx_course_list(request):
+    """Return the updated course list partial for HTMX requests"""
+    # Check if user is HOD of the department
+    if not (hasattr(request.user, 'department') and 
+            request.user == request.user.department.hod):
+        return HttpResponse("Unauthorized", status=403)
+    
+    # Fetch courses for the HOD's department
+    courses = request.user.department.courses.all()
+    
+    # Render only the course list partial
+    return render(request, 'hod/partials/course_list.html', {
+        'courses': courses
+    })
