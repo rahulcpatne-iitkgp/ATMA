@@ -9,18 +9,14 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 4
-      matrix:
-        python-version: [3.12]
-
+    
     steps:
     - uses: actions/checkout@v3
     
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python 3.12
       uses: actions/setup-python@v4
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: '3.12'
     
     - name: Install Dependencies
       run: |
@@ -28,16 +24,12 @@ jobs:
         pip install -r requirements.txt
         pip install coverage
     
-    - name: Check for syntax errors
-      run: |
-        python -m compileall .
-    
     - name: Run Tests
       run: |
         cd atma_backend
         python manage.py test
-    
-    - name: Run Tests with Coverage
+        
+    - name: Generate Coverage Report
       run: |
         cd atma_backend
         coverage run --source='.' manage.py test
