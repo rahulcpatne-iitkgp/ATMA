@@ -45,7 +45,7 @@ def home(request):
             return render(request, 'student/home.html', context)
         
         elif request.user.department and request.user == request.user.department.hod:
-            return redirect('hod-manage-courses')
+            return render(request, 'hod/home.html', context)
     
         elif request.user.role == 'teacher':
             return redirect('teacher_home')

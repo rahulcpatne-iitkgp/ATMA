@@ -12,63 +12,61 @@
           <i class="fa fa-user-circle"></i>
         </div>
         <div class="profile-name">
-          <h3>{{ student.user.get_full_name }}</h3>
-          <p>Student ID: {{ student.student_id }}</p>
+          <h3>{{ user.get_full_name }}</h3>
         </div>
       </div>
       <div class="profile-details">
         <div class="detail-item">
           <span class="detail-label">Department:</span>
-          <span class="detail-value">{{ student.department }}</span>
+          <span class="detail-value">{{ user.department }}</span>
         </div>
-        {% if student.batch %}
+        {% if user.student_profile and user.student_profile.batch %}
         <div class="detail-item">
           <span class="detail-label">Batch:</span>
-          <span class="detail-value">{{ student.batch }}</span>
+          <span class="detail-value">{{ user.student_profile.batch }}</span>
         </div>
         <div class="detail-item">
           <span class="detail-label">Year:</span>
-          <span class="detail-value">{{ student.batch.year }}</span>
+          <span class="detail-value">{{ user.student_profile.batch.year }}</span>
         </div>
         {% endif %}
         <div class="detail-item">
           <span class="detail-label">Email:</span>
-          <span class="detail-value">{{ student.user.email }}</span>
+          <span class="detail-value">{{ user.email }}</span>
         </div>
       </div>
     </div>
   </div>
   
-    {% if needs_batch_selection %}
-    <div class="batch-selection-modal" id="batchSelectionModal">
-        <div class="modal-content">
-            <h2>Select Your Batch</h2>
-            <p>Please select the batch you belong to:</p>
+  {% if needs_batch_selection %}
+  <div class="batch-selection-modal" id="batchSelectionModal">
+      <div class="modal-content">
+          <h2>Select Your Batch</h2>
+          <p>Please select the batch you belong to:</p>
 
-            <form method="post" action="{% url 'select_batch' %}" id="batchSelectionForm">
-                {% csrf_token %}
-                <div class="batch-options">
-                    {% for batch in batches %}
-                    <div class="batch-option">
-                        <input type="radio" name="batch_id" value="{{ batch.id }}" id="batch-{{ batch.id }}" class="hidden-radio">
-                        <label for="batch-{{ batch.id }}" class="batch-card">
-                            <div class="batch-name">{{ batch }}</div>
-                            <div class="batch-year">Year {{ batch.year }}</div>
-                        </label>
-                    </div>
-                    {% empty %}
-                    <p>No batches available for your department.</p>
-                    {% endfor %}
-                </div>
-                <p id="errorFeedback" class="error-feedback" style="display: none; color: red; font-size: 0.9rem;">Please select a batch before submitting.</p>
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
-        </div>
-    </div>
-
-    <div class="modal-backdrop" id="modalBackdrop"></div>
-    {% endif %}
+          <form method="post" action="{% url 'select_batch' %}" id="batchSelectionForm">
+              {% csrf_token %}
+              <div class="batch-options">
+                  {% for batch in batches %}
+                  <div class="batch-option">
+                      <input type="radio" name="batch_id" value="{{ batch.id }}" id="batch-{{ batch.id }}" class="hidden-radio">
+                      <label for="batch-{{ batch.id }}" class="batch-card">
+                          <div class="batch-name">{{ batch }}</div>
+                          <div class="batch-year">Year {{ batch.year }}</div>
+                      </label>
+                  </div>
+                  {% empty %}
+                  <p>No batches available for your department.</p>
+                  {% endfor %}
+              </div>
+              <p id="errorFeedback" class="error-feedback" style="display: none; color: red; font-size: 0.9rem;">Please select a batch before submitting.</p>
+              <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+      </div>
   </div>
+
+  <div class="modal-backdrop" id="modalBackdrop"></div>
+  {% endif %}
 
   {% if needs_batch_selection %}
   <script>

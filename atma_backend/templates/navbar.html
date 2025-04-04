@@ -8,10 +8,10 @@
             
             {% if user.role == 'student' %}
                 <a href="{% url 'view_timetable' %}">My Timetable</a>
-            {% elif user.role == 'teacher' %}
-                <a href="{% url 'teacher_timetable' %}">My Timetable</a>
             {% elif user.department and user == user.department.hod %}
                 <a href="{% url 'hod-manage-courses' %}">Manage Courses</a>
+            {% elif user.role == 'teacher' %}
+                <a href="{% url 'teacher_timetable' %}">My Timetable</a>
             {% endif %}
             
             <a href="{% url 'logout' %}">Logout</a>
